@@ -4,11 +4,41 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Plus } from 'lucide-react'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios';
 type Props = {}
 
 const CreateNoteDialog = (props: Props) => {
-    const [input, setInput] = useState('')
+    const [input, setInput] = useState('');
+    const createDoc = useMutation({
+        mutationFn: async () => {
+          const response = await axios.post("/api/createDoc", {
+            name: input,
+          });
+          return response.data;
+        },
+      });
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (input === "") {
+          window.alert("Please enter a name for your Doc File");
+          return;
+        }
+        createDoc.mutate(undefined, {
+          onSuccess: () => {
+            console.log("sucess");
+            // hit another endpoint to uplod the temp dalle url to permanent firebase url
+            // uploadToFirebase.mutate(note_id);
+            // router.push(`/notebook/${note_id}`);
+          },
+          onError: (error) => {
+            console.error(error);
+            window.alert("Failed to create new Doc File");
+          },
+        });
+      };
+ 
   return (
     <Dialog>
     <DialogTrigger>
@@ -27,7 +57,7 @@ const CreateNoteDialog = (props: Props) => {
         </DialogDescription>
       </DialogHeader>
       {/* <div className="h-"></div> */}
-      <form>
+      <form onSubmit={handleSubmit}>
         <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}

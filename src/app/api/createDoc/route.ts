@@ -1,4 +1,4 @@
-import { generateImagePrompt } from "@/lib/openAi";
+import { generateImagePrompt } from "@/lib/openai";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
