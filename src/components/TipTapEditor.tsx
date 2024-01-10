@@ -4,29 +4,68 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import TipTapMenuBar from "./TipTapMenuBar";
 import { Button } from "./ui/button";
+import { useDebounce } from "@/lib/useDebounce";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { NoteType } from "@/lib/db/schema";
+import Text from '@tiptap/extension-text'
+type Props = {note: NoteType}
 
-type Props = {}
+const TipTapEditor = ({ note }: Props) => {
+    const [editorState, setEditorState] = React.useState(note.editorState || `<h1>${note.name}</h1>`);
 
-const TipTapEditor = (props: Props) => {
-    const [editorState, setEditorState] = React.useState('')
+    const saveNote = useMutation({
+        mutationFn: async () => {
+          const response = await axios.post("/api/saveDoc", {
+            noteId: note.id,
+            editorState,
+          });
+          return response.data;
+        },
+      });
+
+      const customText = Text.extend({
+        addKeyboardShortcuts() {
+          return {
+            "Shift-a": () => {
+              // take the last 30 words
+              console.log('activated')
+              return true;
+            },
+          };
+        },
+      });
+
     const editor = useEditor({
         autofocus: true,
-        extensions: [StarterKit],
+        extensions: [StarterKit, customText],
         content: editorState,
         onUpdate: ({ editor }) => {
             setEditorState(editor.getHTML());
         },
     });
 
+    const debounceEditorState = useDebounce(editorState, 500);
+
     React.useEffect(()=>{
-        console.log(editorState)
-    }, [editorState])
+        if (debounceEditorState === "") return;
+    saveNote.mutate(undefined, {
+      onSuccess: (data) => {
+        console.log("success update!", data);
+      },
+      onError: (err) => {
+        console.error(err);
+      },
+    });
+    }, [debounceEditorState])
 
     return (
         <>
             <div className="flex">
                 {editor && (<TipTapMenuBar editor={editor} /> )}
-                <Button>Saved</Button>
+                <Button disabled variant={"outline"}>
+          {saveNote.isPending ? "Saving..." : "Saved"}
+        </Button>
             </div>
             <div className="prose">
                 <EditorContent editor={editor} />
