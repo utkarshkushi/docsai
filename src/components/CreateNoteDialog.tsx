@@ -1,14 +1,16 @@
 'use client'
 import React, { useState } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
-import { Plus } from 'lucide-react'
+import { Loader2, Plus } from 'lucide-react'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios';
+import { useRouter } from 'next/navigation'
 type Props = {}
 
 const CreateNoteDialog = (props: Props) => {
+    const router = useRouter()
     const [input, setInput] = useState('');
     
     const createDoc = useMutation({
@@ -27,8 +29,9 @@ const CreateNoteDialog = (props: Props) => {
           return;
         }
         createDoc.mutate(undefined, {
-          onSuccess: () => {
-            console.log("sucess");
+          onSuccess: ({ note_id }) => {
+            console.log("successfully created doc" + note_id);
+            router.push(`/doc/${note_id}`);
           },
           onError: (error) => {
             console.error(error);
@@ -69,7 +72,9 @@ const CreateNoteDialog = (props: Props) => {
           <Button
             type="submit"
             className="bg-green-600"
+            disabled={createDoc.isPending}
           >
+            {createDoc.isPending && <Loader2 className='w-4 h-4 mr-2 animate-spin'></Loader2>}
             Create
           </Button>
         </div>
