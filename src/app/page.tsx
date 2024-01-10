@@ -1,10 +1,16 @@
 import TypeWriterTitle from '@/components/ui/TypeWriterTitle'
 import { Button } from '@/components/ui/button'
+import { generateImagePrompt } from '@/lib/openai'
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Home() {
+  // const wai = async () => {
+  //   const image_description = await generateImagePrompt("robot");
+  //   console.log(image_description);
+  // }
+  // wai();
   return (
     <div className='bg-gradient-to-r min-h-screen from-rose-100 to-teal-100'>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">

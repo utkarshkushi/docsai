@@ -10,6 +10,7 @@ type Props = {}
 
 const CreateNoteDialog = (props: Props) => {
     const [input, setInput] = useState('');
+    
     const createDoc = useMutation({
         mutationFn: async () => {
           const response = await axios.post("/api/createDoc", {
@@ -28,9 +29,6 @@ const CreateNoteDialog = (props: Props) => {
         createDoc.mutate(undefined, {
           onSuccess: () => {
             console.log("sucess");
-            // hit another endpoint to uplod the temp dalle url to permanent firebase url
-            // uploadToFirebase.mutate(note_id);
-            // router.push(`/notebook/${note_id}`);
           },
           onError: (error) => {
             console.error(error);
@@ -60,10 +58,10 @@ const CreateNoteDialog = (props: Props) => {
       <form onSubmit={handleSubmit}>
         <Input
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {setInput(e.target.value); console.log(input)}}
           placeholder="Name..."
         />
-        <div className="h-6"></div>
+        <div className="h-6"></div> 
         <div className="flex items-center gap-2">
           <Button type="reset" variant={"secondary"}>
             Cancel
