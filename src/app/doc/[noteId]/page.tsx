@@ -1,3 +1,4 @@
+import DeleteButton from '@/components/DeleteDoc'
 import TipTapEditor from '@/components/TipTapEditor'
 import { Button } from '@/components/ui/button'
 import { clerk } from '@/lib/clerk-server'
@@ -51,7 +52,7 @@ const DocPage = async ({ params: { noteId } }: Props) => {
                     <span className="inline-block mx-1">/</span>
                     <span className="text-stone-500 font-semibold">{note.name}</span>
                     <div className="ml-auto">
-                        {/* <DeleteButton noteId={note.id} /> */}DeleteButton
+                        <DeleteButton noteId={note.id} />
                     </div>
                 </div>
                 <div className="h-4"></div>
