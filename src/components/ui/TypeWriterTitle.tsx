@@ -8,10 +8,10 @@ const TypeWriterTitle = (props: Props) => {
   return (
     <Typewriter options={{loop: true}} onInit={(typeWriter) => {
         typeWriter
-          .typeString("🚀 Supercharged Productivity.")
+          .typeString("Supercharged Productivity.")
           .pauseFor(1000)
           .deleteAll()
-          .typeString("🤖 AI-Powered Insights.")
+          .typeString("AI-Powered Insights.")
           .start();
 
     }} />

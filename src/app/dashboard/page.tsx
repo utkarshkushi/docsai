@@ -15,10 +15,7 @@ type Props = {}
 const DashBoardPage = async (props: Props) => {
 
     const { userId } = auth();
-  const notes = await db
-    .select()
-    .from($notes)
-    .where(eq($notes.userId, userId!));
+    const notes = await db.select().from($notes).where(eq($notes.userId, userId!));
 
   return (
     <div className='min-h-screen'>
@@ -47,7 +44,7 @@ const DashBoardPage = async (props: Props) => {
               return (
                 <a href={`/doc/${note.id}`} key={note.id}>
                   <div className="border border-stone-300 rounded-lg overflow-hidden flex flex-col hover:shadow-xl transition hover:-translate-y-1">
-                    <Image
+                    <img
                       width={400}
                       height={200}
                       alt={note.name}
